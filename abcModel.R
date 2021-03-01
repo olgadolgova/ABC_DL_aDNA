@@ -4,7 +4,7 @@ if("abc" %in% rownames(installed.packages()) == FALSE)
  stop("abc package is required"); 
 }
 library("abc"); # load the abc package
-abc_folder <- “path_to_abc_dl”; # CHANGE TO THE FOLDER WHERE YOU RUN THE SIMULATIONS
+abc_folder <- â€œpath_to_abc_dlâ€; # CHANGE TO THE FOLDER WHERE YOU RUN THE SIMULATIONS
 # now, for each of the neural network replicates, compute the mean distance. Return the sum
 compute.mean.nn <- function(simulated.ss, nen, n.models)
 {
@@ -18,7 +18,7 @@ compute.mean.nn <- function(simulated.ss, nen, n.models)
   return(simulated.ss.by.nn/nen);
 }
 # data with the model predictions from the DL
-data.t <- read.table(file=paste(abc_folder,”model_predictions.txt”,sep=”\\”),header=F);
+data.t <- read.table(file=paste(abc_folder,â€model_predictions.txtâ€,sep=â€\\â€),header=F);
 # first row is the observed data
 observed.ss <- data.t[which(data.t[,1]=="observed"),2:ncol(data.t)]
 # summary statistics of the simulated data. Remember. If we have K models, each K columns correspond to a NN prediction.
@@ -38,3 +38,32 @@ mean.ss <- compute.mean.nn(simulated.ss, ncol(simulated.ss)/ length(model.names)
 mean.observed.ss <- compute.mean.nn(observed.ss, ncol(simulated.ss)/ length(model.names), length(model.names));
 # use postpr to generate the posterior distribution of the data. Check the function in abc package.
 res <- postpr(mean.observed.ss, models, mean.ss, tol=1000/nrow(simulated.ss),method="mnlogistic");
+summary(res)
+model.names
+
+#To calculate the confusion matrix out of 100 simulations per model to see to which extend the simulations generated under particular model (rows) are properly assigned to this model (columns)
+confussion.matrix <- matrix(nrow=length(model.names), ncol=length(model.names),rep(0,length(model.names)*length(model.names)));
+rownames(confussion.matrix) <- as.character(model.names);
+colnames(confussion.matrix) <- as.character(model.names);
+
+
+for(m in 1:length(model.names))
+{
+  ids <- which(models==m);
+  print(m);
+  for(rep in 1:100) 
+  {
+    use.id <- sample(ids,1);
+    mean.ss.observed.nn <- mean.ss[use.id,];
+    res <- postpr(mean.ss.observed.nn, models[-use.id],mean.ss[-use.id,],tol=1000/nrow(mean.ss),method="mnlogistic");
+    ex <- summary(res,print = FALSE)$mnlogistic$Prob;
+    if(is.null(ex))
+    {
+      ex <- summary(res, print = FALSE)$Prob;
+    }
+    model.max <- which(ex==max(ex));
+    confussion.matrix[m,model.max[1]] <- confussion.matrix[m,model.max[1]] + 1;
+  }
+}
+confussion.matrix
+
