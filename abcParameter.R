@@ -6,11 +6,20 @@ library("bayestestR");
 library("genefilter");
 library("ggplot2");
 # simulated data
+<<<<<<< Updated upstream:abcParameter.R
 abc_folder <-"path\\to\\your\\folder\\"; 
 abc_sims <- paste(abc_folder,"Model_B_replication_parameter_for_ABC.txt", sep=""); # change to the name of your file
 obs <- read.table(file=paste(abc_folder,"Model_B_observed_parameter_for_abc.txt",sep=""),header=T); # change to the name of your file
 data.tt <- read.table(file=abc_sims,header=T);
 number.of.replicates.by.parameter <- 10; #the number of replications = the number of nn per parameter used
+=======
+#abc_folder <-"path\\to\\your\\folder\\"; 
+abc_folder <-"C:\\Users\\odolgova\\OneDrive - CRG - Centre de Regulacio Genomica\\Olga\\Bronze Age Greece\\Final_corrections\\ABC-DL_OL_github\\ABC_DL-master_OD\\ABC_DL_Example_Project\\test_model\\"; 
+abc_sims <- paste(abc_folder,"Model_B_replication_parameter_for_ABC.txt", sep=""); # change to the name of your file
+obs <- read.table(file=paste(abc_folder,"Model_B_observed_parameter_for_abc.txt",sep=""),header=T); # change to the name of your file
+data.tt <- read.table(file=abc_sims,header=T);
+number.of.replicates.by.parameter <- 10;
+>>>>>>> Stashed changes:abc_Parameters.R
 
 ##############################################################################################################
 #
